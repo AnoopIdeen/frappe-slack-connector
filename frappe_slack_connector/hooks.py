@@ -31,7 +31,7 @@ required_apps = ["frappe/erpnext", "frappe/hrms"]
 # include js in doctype views
 doctype_js = {
     "User Meta": "public/js/user_meta.js",
-    "User": "public/js/user_doctype.js",
+    # "User": "public/js/user_doctype.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -143,27 +143,27 @@ fixtures = [
 # ---------------
 # Hook on document methods and events
 
-doc_events = {
-    "Leave Application": {
-        "after_insert": "frappe_slack_connector.override.leave_application.after_insert",
-    },
-}
+# doc_events = {
+#     "Leave Application": {
+#         "after_insert": "frappe_slack_connector.override.leave_application.after_insert",
+#     },
+# }
 
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {
-    "all": [
-        "frappe_slack_connector.tasks.attendance_summary.attendance_channel",
-    ],
-    "hourly": [
-        "frappe_slack_connector.tasks.send_daily_reminder.send_reminder",
-    ],
-    "weekly": [
-        "frappe_slack_connector.api.sync_slack_settings.sync_slack_job",
-    ],
-    # "monthly": ["frappe_slack_connector.tasks.monthly"],
-}
+# scheduler_events = {
+#     "all": [
+#         "frappe_slack_connector.tasks.attendance_summary.attendance_channel",
+#     ],
+#     "hourly": [
+#         "frappe_slack_connector.tasks.send_daily_reminder.send_reminder",
+#     ],
+#     "weekly": [
+#         "frappe_slack_connector.api.sync_slack_settings.sync_slack_job",
+#     ],
+#     # "monthly": ["frappe_slack_connector.tasks.monthly"],
+# }
 
 # Testing
 # -------

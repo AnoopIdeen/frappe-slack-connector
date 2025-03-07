@@ -13,7 +13,8 @@ def sync_slack_data():
     Enqueues the background job to sync
     """
     frappe.msgprint(_("Syncing Slack data..."))
-    frappe.enqueue(sync_slack_job, queue="long", notify=True)
+    # frappe.enqueue(sync_slack_job, queue="long", notify=True)
+    sync_slack_job()
 
 
 def sync_slack_job(notify: bool = False):

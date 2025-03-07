@@ -193,9 +193,7 @@ def format_leave_application_blocks_for_approver(
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text":  f"""{employee_name} has submitted a new leave request.\t (*Leave ID:* <{leave_link}|{leave_id}>)\n
-            *Leave Type:* {leave_type} \t*Submitted On:* {leave_submission_date}\n
-            *From:* {from_date} *To:* {to_date}"""
+            "text":  f"""{employee_name} has submitted a new leave request.(<{leave_link}|{leave_id}>)\n*Leave Type:* {leave_type} \n*Submitted On:* {leave_submission_date}\n*From:* {from_date} \n*To:* {to_date}"""
         },
     },
         {
@@ -277,41 +275,17 @@ def format_leave_application_blocks_for_requester(
         #     "type": "header",
         #     "text": {
         #         "type": "plain_text",
-        #         "text": ":memo: Your Leave Application Status",
+        #         "text": ":memo: New Leave Application",
         #         "emoji": True,
         #     },
         # },
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"Your leave request has been submitted successfully!",
-            },
+       {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text":  f"""Your leave request has been submitted successfully!(<{leave_link}|{leave_id}>).\n*Leave Type:* {leave_type} \n*Submitted On:* {leave_submission_date}\n*From:* {from_date} \n*To:* {to_date}"""
         },
-        {
-            "type": "context",
-            "elements": [
-                {
-                    "type": "mrkdwn",
-                    "text": f"*Leave ID:* <{leave_link}|{leave_id}> ",
-                }
-            ],
-        },
-        {"type": "divider"},
-        {
-            "type": "section",
-            "fields": [
-                {"type": "mrkdwn", "text": f"*Leave Type:* {leave_type}"},
-                {"type": "mrkdwn", "text": f"*Submitted On:* {leave_submission_date}"},
-            ],
-        },
-        {
-            "type": "section",
-            "fields": [
-                {"type": "mrkdwn", "text": f"*From:* {from_date}"},
-                {"type": "mrkdwn", "text": f"*To:* {to_date}"},
-            ],
-        },
+    },
         {
             "type": "section",
             "text": {
@@ -370,36 +344,10 @@ def format_leave_approve_block( *,
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": "Your leave request has been *approved*!",
+            "text":  f"""Your leave request has been *Approved* (<{leave_link}|{leave_id}>).\n*Leave Type:* {leave_type} \n*Approved On:* {approve_date}\n*From:* {from_date} \n*To:* {to_date}"""
+
                     },
-                },
-                {
-                    "type": "context",
-                    "elements": [
-                        {
-                            "type": "mrkdwn",
-                            "text": f"*Leave ID:* {leave_id}",
-
-                        },
-
-                    ],
-                },
-                {"type": "divider"},
-                {
-                    "type": "section",
-                    "fields": [
-                        {"type": "mrkdwn", "text": f"*Leave Type:* {leave_type}"},
-                         {"type": "mrkdwn", "text": f"*Approved On:* {approve_date}"},
-
-                    ],
-                },
-                {
-                    "type": "section",
-                    "fields": [
-                        {"type": "mrkdwn", "text": f"*From:* {from_date}"},
-                        {"type": "mrkdwn", "text": f"*To:* {to_date}"},
-                    ],
-                },
+                }
               
             ]
 
@@ -426,33 +374,12 @@ def format_leave_reject_block(
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "Your leave request has been *rejected*.",
+             
+            "text":  f"""Your leave request has been *Rejected* .(<{leave_link}|{leave_id}>).\n*Leave Type:* {leave_type} \n*Rejected On:* {reject_date}\n*From:* {from_date} \n*To:* {to_date}"""
+
             },
         },
-        {
-            "type": "context",
-            "elements": [
-                {
-                    "type": "mrkdwn",
-                    "text": f"*Leave ID:* {leave_id}",
-                },
-            ],
-        },
-        {"type": "divider"},
-        {
-            "type": "section",
-            "fields": [
-                {"type": "mrkdwn", "text": f"*Leave Type:* {leave_type}"},
-                {"type": "mrkdwn", "text": f"*Rejected On:* {reject_date}"},
-            ],
-        },
-        {
-            "type": "section",
-            "fields": [
-                {"type": "mrkdwn", "text": f"*From:* {from_date}"},
-                {"type": "mrkdwn", "text": f"*To:* {to_date}"},
-            ],
-        }
+       
     ]
     return blocks
 
@@ -477,34 +404,12 @@ def format_leave_cancel_block(
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "Your leave request has been *cancelled*.",
+                "text": "",
+            "text":  f"""Your leave request has been *Cancelled* .(<{leave_link}|{leave_id}>).\n*Leave Type:* {leave_type} \n*Cancelled On:* {cancel_date}\n*From:* {from_date} \n*To:* {to_date}"""
+
             },
         },
-        {
-            "type": "context",
-            "elements": [
-                {
-                    "type": "mrkdwn",
-                    "text": f"*Leave ID:* {leave_id}",
-
-                },
-            ],
-        },
-        {"type": "divider"},
-        {
-            "type": "section",
-            "fields": [
-                {"type": "mrkdwn", "text": f"*Leave Type:* {leave_type}"},
-                {"type": "mrkdwn", "text": f"*Cancelled On:* {cancel_date}"},
-            ],
-        },
-        {
-            "type": "section",
-            "fields": [
-                {"type": "mrkdwn", "text": f"*From:* {from_date}"},
-                {"type": "mrkdwn", "text": f"*To:* {to_date}"},
-            ],
-        },
+      
      
     ]
     return blocks

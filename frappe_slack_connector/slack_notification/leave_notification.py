@@ -181,48 +181,23 @@ def format_leave_application_blocks_for_approver(
     Format the blocks for the leave application message
     """
     blocks = [
-        {
-            "type": "header",
-            "text": {
-                "type": "plain_text",
-                "text": ":memo: New Leave Application",
-                "emoji": True,
-            },
+        # {
+        #     "type": "header",
+        #     "text": {
+        #         "type": "plain_text",
+        #         "text": ":memo: New Leave Application",
+        #         "emoji": True,
+        #     },
+        # },
+       {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text":  f"""{employee_name} has submitted a new leave request.\t (*Leave ID:* <{leave_link}|{leave_id}>)\n
+            *Leave Type:* {leave_type} \t*Submitted On:* {leave_submission_date}\n
+            *From:* {from_date} *To:* {to_date}"""
         },
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"{employee_name} has submitted a new leave request.",
-            },
-        },
-        {
-            "type": "context",
-            "elements": [
-                {
-                    "type": "mrkdwn",
-                    "text": f"*Leave ID:* <{leave_link}|{leave_id}> ",
-                }
-            ],
-        },
-        {"type": "divider"},
-        {
-            "type": "section",
-            "fields": [
-                {"type": "mrkdwn", "text": f"*Leave Type:* {leave_type}"},
-                {
-                    "type": "mrkdwn",
-                    "text": f"*Submitted On:* {leave_submission_date}",
-                },
-            ],
-        },
-        {
-            "type": "section",
-            "fields": [
-                {"type": "mrkdwn", "text": f"*From:* {from_date}"},
-                {"type": "mrkdwn", "text": f"*To:* {to_date}"},
-            ],
-        },
+    },
         {
             "type": "section",
             "text": {
@@ -298,14 +273,14 @@ def format_leave_application_blocks_for_requester(
 ) -> list:
 
     blocks = [
-        {
-            "type": "header",
-            "text": {
-                "type": "plain_text",
-                "text": ":memo: Your Leave Application Status",
-                "emoji": True,
-            },
-        },
+        # {
+        #     "type": "header",
+        #     "text": {
+        #         "type": "plain_text",
+        #         "text": ":memo: Your Leave Application Status",
+        #         "emoji": True,
+        #     },
+        # },
         {
             "type": "section",
             "text": {
@@ -383,14 +358,14 @@ def format_leave_approve_block( *,
     leave_link: str = "#",
 ) -> list:
     blocks = [
-                {
-                    "type": "header",
-                    "text": {
-                        "type": "plain_text",
-                        "text": ":white_check_mark: Leave Application Approved",
-                        "emoji": True,
-                    },
-                },
+                # {
+                #     "type": "header",
+                #     "text": {
+                #         "type": "plain_text",
+                #         "text": ":white_check_mark: Leave Application Approved",
+                #         "emoji": True,
+                #     },
+                # },
                 {
                     "type": "section",
                     "text": {
@@ -439,14 +414,14 @@ def format_leave_reject_block(
     leave_link: str = "#",
 )-> list:
     blocks = [
-        {
-            "type": "header",
-            "text": {
-                "type": "plain_text",
-                "text": ":x: Leave Application Rejected",
-                "emoji": True,
-            },
-        },
+        # {
+        #     "type": "header",
+        #     "text": {
+        #         "type": "plain_text",
+        #         "text": ":x: Leave Application Rejected",
+        #         "emoji": True,
+        #     },
+        # },
         {
             "type": "section",
             "text": {
@@ -490,14 +465,14 @@ def format_leave_cancel_block(
     leave_link: str = "#",
 )-> list:
     blocks = [
-        {
-            "type": "header",
-            "text": {
-                "type": "plain_text",
-                "text": ":warning: Leave Application Cancelled",
-                "emoji": True,
-            },
-        },
+        # {
+        #     "type": "header",
+        #     "text": {
+        #         "type": "plain_text",
+        #         "text": ":warning: Leave Application Cancelled",
+        #         "emoji": True,
+        #     },
+        # },
         {
             "type": "section",
             "text": {

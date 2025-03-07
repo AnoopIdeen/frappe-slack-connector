@@ -6,8 +6,7 @@ from frappe_slack_connector.db.user_meta import get_userid_from_slackid
 from frappe_slack_connector.helpers.error import generate_error_log
 from frappe_slack_connector.helpers.str_utils import strip_html_tags
 from frappe_slack_connector.slack.app import SlackIntegration
-
-
+@frappe.whitelist()
 def handler(slack: SlackIntegration, payload: dict):
     """
     Handle the interaction when a leave application is approved or rejected
@@ -17,6 +16,7 @@ def handler(slack: SlackIntegration, payload: dict):
     try:
         # Check the user who sent the request
         user_id = payload.get("user", {}).get("id")
+        
         if not user_id:
             generate_error_log("User ID not found in payload", msgprint=True)
         frappe.set_user(get_userid_from_slackid(user_id))
@@ -28,6 +28,7 @@ def handler(slack: SlackIntegration, payload: dict):
         if action_id == "leave_approve":
             approve_leave(leave_id)
         elif action_id == "leave_reject":
+            print("user_id       d",user_id)
             reject_leave(leave_id)
         else:
             frappe.throw(_("Unknown action"))

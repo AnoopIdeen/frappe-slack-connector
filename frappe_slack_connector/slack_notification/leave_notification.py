@@ -437,7 +437,7 @@ def format_leave_reject_block(
     to_date: str,
     reject_date:str,
     leave_link: str = "#",
-):
+)-> list:
     blocks = [
         {
             "type": "header",
@@ -488,7 +488,7 @@ def format_leave_cancel_block(
     to_date: str,
     cancel_date:str,
     leave_link: str = "#",
-):
+)-> list:
     blocks = [
         {
             "type": "header",

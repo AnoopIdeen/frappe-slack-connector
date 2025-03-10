@@ -20,59 +20,6 @@ def send_leave_notification(doc):
         doc=doc,
     )
 
-def send_final_notification(doc):
-    #  frappe.enqueue(
-    #     send_final_notification_bg,
-    #     queue="short",
-    #     doc=doc,
-    # )
-    send_final_notification_bg(doc)
-    
-def send_final_notification_bg(doc:Document):
-    slack = SlackIntegration()
-
-    try:
-        user_slack = slack.get_slack_user_id(employee_id=doc.employee)
-
-    except Exception as e:
-        generate_error_log(
-            title="Error fetching approver slack id",
-            exception=e,
-        )
-        user_slack = None
-    blocks=[]
-    if doc.workflow_state=="Approved":
-        blocks=format_leave_approve_block(
-                        leave_id=str(doc.name),
-                        leave_type=doc.leave_type,
-                        from_date=standard_date_fmt(doc.from_date),
-                        to_date=standard_date_fmt(doc.to_date),
-                        approve_date=standard_date_fmt(frappe.utils.now())
-                    )
-    if doc.workflow_state=="Rejected":
-        blocks=format_leave_reject_block(
-                            leave_id=str(doc.name),
-                            leave_type=doc.leave_type,
-                            from_date=standard_date_fmt(doc.from_date),
-                            to_date=standard_date_fmt(doc.to_date),
-                            reject_date=standard_date_fmt(frappe.utils.now())
-                        )
-    print("doc.workflow_state",doc.workflow_state)
-    if doc.workflow_state=="Cancelled":
-        blocks=format_leave_cancel_block(
-                            leave_id=str(doc.name),
-                            leave_type=doc.leave_type,
-                            from_date=standard_date_fmt(doc.from_date),
-                            to_date=standard_date_fmt(doc.to_date),
-                            cancel_date=standard_date_fmt(frappe.utils.now())
-                        )
-    # send message to requester
-    if user_slack is not None and blocks is not None:
-        slack.slack_app.client.chat_postMessage(
-                channel=user_slack,
-                blocks=blocks
-            )
-
 def send_leave_notification_bg(doc: Document):
     """
     Send a slack message to the leave approver when
@@ -163,6 +110,60 @@ def send_leave_notification_bg(doc: Document):
             title="Error posting message to Slack",
             exception=e,
         )
+
+def send_final_notification(doc):
+    #  frappe.enqueue(
+    #     send_final_notification_bg,
+    #     queue="short",
+    #     doc=doc,
+    # )
+    send_final_notification_bg(doc)
+    
+def send_final_notification_bg(doc:Document):
+    slack = SlackIntegration()
+
+    try:
+        user_slack = slack.get_slack_user_id(employee_id=doc.employee)
+
+    except Exception as e:
+        generate_error_log(
+            title="Error fetching approver slack id",
+            exception=e,
+        )
+        user_slack = None
+    blocks=[]
+    if doc.workflow_state=="Approved":
+        blocks=format_leave_approve_block(
+                        leave_id=str(doc.name),
+                        leave_type=doc.leave_type,
+                        from_date=standard_date_fmt(doc.from_date),
+                        to_date=standard_date_fmt(doc.to_date),
+                        approve_date=standard_date_fmt(frappe.utils.now())
+                    )
+    if doc.workflow_state=="Rejected":
+        blocks=format_leave_reject_block(
+                            leave_id=str(doc.name),
+                            leave_type=doc.leave_type,
+                            from_date=standard_date_fmt(doc.from_date),
+                            to_date=standard_date_fmt(doc.to_date),
+                            reject_date=standard_date_fmt(frappe.utils.now())
+                        )
+    print("doc.workflow_state",doc.workflow_state)
+    if doc.workflow_state=="Cancelled":
+        blocks=format_leave_cancel_block(
+                            leave_id=str(doc.name),
+                            leave_type=doc.leave_type,
+                            from_date=standard_date_fmt(doc.from_date),
+                            to_date=standard_date_fmt(doc.to_date),
+                            cancel_date=standard_date_fmt(frappe.utils.now())
+                        )
+    # send message to requester
+    if user_slack is not None and blocks is not None:
+        slack.slack_app.client.chat_postMessage(
+                channel=user_slack,
+                blocks=blocks
+            )
+
 
 def format_leave_application_blocks_for_approver(
     *,
@@ -414,4 +415,52 @@ def format_leave_cancel_block(
     ]
     return blocks
 
+@frappe.whitelist()
+def get_today_leave_list():
+    today=frappe.utils.today()
+    tomorrow=frappe.utils.add_to_date(today,days=1)
+    today_leaves=frappe.get_all("Leave Application",filters=[['from_date','<=',today],['to_date','>=',today]],fields=['name','description as reason','employee','employee_name','custom_user'])
+    today_leave_notification(today_leaves)
+    
+    tomorrow_leaves=frappe.get_all("Leave Application",filters=[['from_date','<=',tomorrow],['to_date','>=',tomorrow]],fields=['name','description as reason','employee','employee_name','custom_user'])
+    tomorrow_leave_notification(tomorrow_leaves)
+    
+def today_leave_notification(today_leaves):
+    for leaves in today_leaves:
+        user_meta = frappe.get_all("User Meta",filters=[['user','=',leaves['custom_user']]])
+        if user_meta:
+            # print('today_leave_notification',user_meta)
+            slack = SlackIntegration()
+            chanel_list=slack.slack_app.client.users_conversations(user=leaves['custom_user'])
+            print("chanel_list 1", chanel_list)
+            blocks = [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+            "text":  f"""* {leaves['employee_name']} * is leave on today"""
 
+                    },
+                }
+            ]
+   
+def tomorrow_leave_notification(tomorrow_leaves):
+    for leaves in tomorrow_leaves:
+        user_meta = frappe.get_all("User Meta",filters=[['user','=',leaves['custom_user']]])
+        if user_meta:
+            # print('tomorrow_leave_notification',user_meta)
+            slack = SlackIntegration()
+            print("leaves['custom_user']",leaves['custom_user'])
+            response=slack.slack_app.client.users_conversations(user=leaves['custom_user'])
+            print("response",leaves['custom_user'],response)
+            blocks = [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+            "text":  f"""* {leaves['employee_name']} * is leave on tomorrow"""
+
+                    },
+                }
+              
+            ]
